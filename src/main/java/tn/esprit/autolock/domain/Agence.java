@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "agence")
 @Getter
@@ -29,4 +32,12 @@ public class Agence {
 
     @Column(length = 20)
     private String telephone;
+
+    // Une agence emploie plusieurs employés (côté inverse : la clé étrangère est dans employe)
+    @OneToMany(mappedBy = "agence")
+    private List<Employe> employes = new ArrayList<>();
+
+    // Une agence possède plusieurs véhicules (la clé étrangère est dans vehicule)
+    @OneToMany(mappedBy = "agence")
+    private List<Vehicule> vehicules = new ArrayList<>();
 }

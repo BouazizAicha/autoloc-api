@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "client")
@@ -36,4 +38,8 @@ public class Client {
     private String numPermis;
 
     private LocalDate dateInscription;
+
+    // Un client effectue plusieurs réservations (la clé étrangère est dans reservation)
+    @OneToMany(mappedBy = "client")
+    private List<Reservation> reservations = new ArrayList<>();
 }

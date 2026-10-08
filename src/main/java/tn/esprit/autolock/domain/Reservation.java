@@ -29,4 +29,18 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutReservation statut;
+
+    // Plusieurs réservations pour un même client (côté propriétaire : colonne id_client)
+    @ManyToOne
+    @JoinColumn(name = "id_client")
+    private Client client;
+
+    // Plusieurs réservations pour un même véhicule (côté propriétaire : colonne id_vehicule)
+    @ManyToOne
+    @JoinColumn(name = "id_vehicule")
+    private Vehicule vehicule;
+
+    // Une réservation donne lieu à un seul contrat (côté inverse : la clé étrangère est dans contrat)
+    @OneToOne(mappedBy = "reservation")
+    private Contrat contrat;
 }

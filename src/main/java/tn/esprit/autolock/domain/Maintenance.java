@@ -26,4 +26,9 @@ public class Maintenance {
     private LocalDate dateFin;
 
     private String description;
+
+    // Un véhicule peut avoir plusieurs maintenances (côté propriétaire : colonne id_vehicule)
+    @ManyToOne
+    @JoinColumn(name = "id_vehicule")
+    private Vehicule vehicule;
 }
