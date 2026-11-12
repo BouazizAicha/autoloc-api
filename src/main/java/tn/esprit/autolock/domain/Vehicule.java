@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,10 +50,12 @@ public class Vehicule {
 
     // Un véhicule peut être réservé plusieurs fois
     @OneToMany(mappedBy = "vehicule")
+    @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
 
     // Un véhicule peut avoir plusieurs interventions de maintenance
     @OneToMany(mappedBy = "vehicule")
+    @JsonIgnore
     private List<Maintenance> maintenances = new ArrayList<>();
 
     // Many-to-Many véhicule <-> équipement : crée la table de jointure vehicule_equipement

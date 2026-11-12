@@ -1,0 +1,11 @@
+POST http://localhost:8081/clients
+Content-Type: application/json
+
+{
+  "nom": "Ben Ali",
+  "prenom": "Sami",
+  "email": "sami@test.tn",
+  "telephone": "20123456",
+  "numPermis": "12345678",
+  "dateInscription": "2026-10-20"
+}

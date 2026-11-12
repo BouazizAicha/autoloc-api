@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +27,6 @@ public class Equipement {
 
     // Un équipement peut équiper plusieurs véhicules (côté inverse : la table de jointure est gérée par Vehicule)
     @ManyToMany(mappedBy = "equipements")
+    @JsonIgnore
     private List<Vehicule> vehicules = new ArrayList<>();
 }

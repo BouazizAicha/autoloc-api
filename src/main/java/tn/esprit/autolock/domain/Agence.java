@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,9 +36,11 @@ public class Agence {
 
     // Une agence emploie plusieurs employés (côté inverse : la clé étrangère est dans employe)
     @OneToMany(mappedBy = "agence")
+    @JsonIgnore
     private List<Employe> employes = new ArrayList<>();
 
     // Une agence possède plusieurs véhicules (la clé étrangère est dans vehicule)
     @OneToMany(mappedBy = "agence")
+    @JsonIgnore
     private List<Vehicule> vehicules = new ArrayList<>();
 }

@@ -1,0 +1,134 @@
+### 1. Agence
+POST http://localhost:8081/agences
+Content-Type: application/json
+
+{
+  "nom": "Agence Tunis Centre",
+  "ville": "Tunis",
+  "adresse": "12 Avenue Habib Bourguiba",
+  "telephone": "71123456"
+}
+
+> {% client.global.set("idAgence", response.body.idAgence); %}
+
+### 2. Employe
+POST http://localhost:8081/employes
+Content-Type: application/json
+
+{
+  "nom": "Trabelsi",
+  "prenom": "Ahmed",
+  "role": "AGENT",
+  "agence": { "idAgence": {{idAgence}} }
+}
+
+### 3. Client
+POST http://localhost:8081/clients
+Content-Type: application/json
+
+{
+  "nom": "Ben Ali",
+  "prenom": "Sami",
+  "email": "sami{{$random.integer(1000, 9999)}}@test.tn",
+  "telephone": "20123456",
+  "numPermis": "{{$random.integer(10000000, 99999999)}}",
+  "dateInscription": "2026-10-20"
+}
+
+> {% client.global.set("idClient", response.body.idClient); %}
+
+### 4. Vehicule
+POST http://localhost:8081/vehicules
+Content-Type: application/json
+
+{
+  "immatriculation": "{{$random.integer(100, 999)}} TUN {{$random.integer(1000, 9999)}}",
+  "marque": "Peugeot",
+  "modele": "208",
+  "categorie": "CITADINE",
+  "tarifJournalier": 85.50,
+  "statut": "DISPONIBLE",
+  "agence": { "idAgence": {{idAgence}} }
+}
+
+> {% client.global.set("idVehicule", response.body.idVehicule); %}
+
+### 5. Equipement
+POST http://localhost:8081/equipements
+Content-Type: application/json
+
+{
+  "libelle": "GPS"
+}
+
+> {% client.global.set("idEquipement", response.body.idEquipement); %}
+
+### 6. Reservation
+POST http://localhost:8081/reservations
+Content-Type: application/json
+
+{
+  "dateDebut": "2026-11-01",
+  "dateFin": "2026-11-05",
+  "statut": "CONFIRMEE",
+  "client": { "idClient": {{idClient}} },
+  "vehicule": { "idVehicule": {{idVehicule}} }
+}
+
+> {% client.global.set("idReservation", response.body.idReservation); %}
+
+### 7. Contrat
+POST http://localhost:8081/contrats
+Content-Type: application/json
+
+{
+  "dateSignature": "2026-10-30",
+  "montantTotal": 342.00,
+  "valide": true,
+  "reservation": { "idReservation": {{idReservation}} }
+}
+
+> {% client.global.set("idContrat", response.body.idContrat); %}
+
+### 8. Paiement
+POST http://localhost:8081/paiements
+Content-Type: application/json
+
+{
+  "montant": 342.00,
+  "datePaiement": "2026-10-30",
+  "modePaiement": "CARTE",
+  "contrat": { "idContrat": {{idContrat}} }
+}
+
+### 9. Maintenance
+POST http://localhost:8081/maintenances
+Content-Type: application/json
+
+{
+  "dateDebut": "2026-12-01",
+  "dateFin": "2026-12-03",
+  "description": "Vidange et contrôle freins",
+  "vehicule": { "idVehicule": {{idVehicule}} }
+}
+
+### 10. CRUD complet sur Equipement : GET un
+GET http://localhost:8081/equipements/{{idEquipement}}
+
+### 11. PUT (modifier)
+PUT http://localhost:8081/equipements
+Content-Type: application/json
+
+{
+  "idEquipement": {{idEquipement}},
+  "libelle": "GPS Premium"
+}
+
+### 12. GET liste
+GET http://localhost:8081/equipements
+
+### 13. DELETE
+DELETE http://localhost:8081/equipements/{{idEquipement}}
+
+### 14. GET liste apres suppression
+GET http://localhost:8081/equipements

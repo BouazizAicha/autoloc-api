@@ -1,0 +1,23 @@
+GET http://localhost:8081/clients/1
+
+###
+
+POST http://localhost:8081/vehicules
+Content-Type: application/json
+
+{
+  "immatriculation": "123 TUN 4597",
+  "marque": "Peugeot",
+  "modele": "208",
+  "categorie": "CITADINE",
+  "tarifJournalier": 85.50,
+  "statut": "DISPONIBLE"
+}
+
+###
+
+GET http://localhost:8081/vehicules
+
+###
+
+GET http://localhost:8081/vehicules/1

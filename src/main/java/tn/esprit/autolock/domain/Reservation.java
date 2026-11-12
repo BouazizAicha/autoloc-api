@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,5 +43,6 @@ public class Reservation {
 
     // Une réservation donne lieu à un seul contrat (côté inverse : la clé étrangère est dans contrat)
     @OneToOne(mappedBy = "reservation")
+    @JsonIgnore
     private Contrat contrat;
 }

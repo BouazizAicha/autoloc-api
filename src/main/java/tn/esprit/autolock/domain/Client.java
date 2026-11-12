@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,5 +42,6 @@ public class Client {
 
     // Un client effectue plusieurs réservations (la clé étrangère est dans reservation)
     @OneToMany(mappedBy = "client")
+    @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
 }

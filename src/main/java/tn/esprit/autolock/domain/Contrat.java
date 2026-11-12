@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,5 +40,6 @@ public class Contrat {
 
     // Un contrat peut être réglé en plusieurs paiements (la clé étrangère est dans paiement)
     @OneToMany(mappedBy = "contrat")
+    @JsonIgnore
     private List<Paiement> paiements = new ArrayList<>();
 }
