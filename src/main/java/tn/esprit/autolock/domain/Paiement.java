@@ -1,5 +1,6 @@
 package tn.esprit.autolock.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -44,5 +45,6 @@ public class Paiement {
     // Plusieurs paiements pour un même contrat (côté propriétaire : colonne id_contrat)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_contrat")
+    @JsonBackReference("contrat-paiements")
     private Contrat contrat;
 }

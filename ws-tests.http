@@ -1,5 +1,5 @@
 ### 1. Agence
-POST http://localhost:8081/agences
+POST http://localhost:8081/api/agences
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 > {% client.global.set("idAgence", response.body.idAgence); %}
 
 ### 2. Employe
-POST http://localhost:8081/employes
+POST http://localhost:8081/api/employes
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### 3. Client
-POST http://localhost:8081/clients
+POST http://localhost:8081/api/clients
 Content-Type: application/json
 
 {
@@ -38,7 +38,7 @@ Content-Type: application/json
 > {% client.global.set("idClient", response.body.idClient); %}
 
 ### 4. Vehicule
-POST http://localhost:8081/vehicules
+POST http://localhost:8081/api/vehicules
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
 > {% client.global.set("idVehicule", response.body.idVehicule); %}
 
 ### 5. Equipement
-POST http://localhost:8081/equipements
+POST http://localhost:8081/api/equipements
 Content-Type: application/json
 
 {
@@ -64,7 +64,7 @@ Content-Type: application/json
 > {% client.global.set("idEquipement", response.body.idEquipement); %}
 
 ### 6. Reservation
-POST http://localhost:8081/reservations
+POST http://localhost:8081/api/reservations
 Content-Type: application/json
 
 {
@@ -78,7 +78,7 @@ Content-Type: application/json
 > {% client.global.set("idReservation", response.body.idReservation); %}
 
 ### 7. Contrat
-POST http://localhost:8081/contrats
+POST http://localhost:8081/api/contrats
 Content-Type: application/json
 
 {
@@ -91,10 +91,10 @@ Content-Type: application/json
 > {% client.global.set("idContrat", response.body.idContrat); %}
 
 ### 8. Paiement (lecture seule : les paiements passent par le Contrat)
-GET http://localhost:8081/paiements
+GET http://localhost:8081/api/paiements
 
 ### 9. Maintenance
-POST http://localhost:8081/maintenances
+POST http://localhost:8081/api/maintenances
 Content-Type: application/json
 
 {
@@ -105,10 +105,10 @@ Content-Type: application/json
 }
 
 ### 10. CRUD complet sur Equipement : GET un
-GET http://localhost:8081/equipements/{{idEquipement}}
+GET http://localhost:8081/api/equipements/{{idEquipement}}
 
 ### 11. PUT (modifier)
-PUT http://localhost:8081/equipements/{{idEquipement}}
+PUT http://localhost:8081/api/equipements/{{idEquipement}}
 Content-Type: application/json
 
 {
@@ -117,10 +117,10 @@ Content-Type: application/json
 }
 
 ### 12. GET liste
-GET http://localhost:8081/equipements
+GET http://localhost:8081/api/equipements
 
 ### 13. DELETE
-DELETE http://localhost:8081/equipements/{{idEquipement}}
+DELETE http://localhost:8081/api/equipements/{{idEquipement}}
 
 ### 14. GET liste apres suppression
-GET http://localhost:8081/equipements
+GET http://localhost:8081/api/equipements
