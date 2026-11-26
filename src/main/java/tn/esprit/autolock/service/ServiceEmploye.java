@@ -3,7 +3,7 @@ package tn.esprit.autolock.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autolock.domain.Employe;
-import tn.esprit.autolock.repository.EmployeRepository;
+import tn.esprit.autolock.repository.IEmployeRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceEmploye implements IServiceEmploye {
 
     // Injection de dépendance par constructeur (généré par Lombok grâce à @RequiredArgsConstructor)
-    private final EmployeRepository employeRepository;
+    private final IEmployeRepository employeRepository;
 
     @Override
     public List<Employe> retrieveAllEmployes() {

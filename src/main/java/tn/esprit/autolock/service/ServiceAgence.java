@@ -3,7 +3,7 @@ package tn.esprit.autolock.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autolock.domain.Agence;
-import tn.esprit.autolock.repository.AgenceRepository;
+import tn.esprit.autolock.repository.IAgenceRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceAgence implements IServiceAgence {
 
     // Injection de dépendance par constructeur (généré par Lombok grâce à @RequiredArgsConstructor)
-    private final AgenceRepository agenceRepository;
+    private final IAgenceRepository agenceRepository;
 
     @Override
     public List<Agence> retrieveAllAgences() {

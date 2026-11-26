@@ -3,7 +3,7 @@ package tn.esprit.autolock.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autolock.domain.Reservation;
-import tn.esprit.autolock.repository.ReservationRepository;
+import tn.esprit.autolock.repository.IReservationRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceReservation implements IServiceReservation {
 
     // Injection de dépendance par constructeur (généré par Lombok grâce à @RequiredArgsConstructor)
-    private final ReservationRepository reservationRepository;
+    private final IReservationRepository reservationRepository;
 
     @Override
     public List<Reservation> retrieveAllReservations() {

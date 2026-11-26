@@ -3,7 +3,7 @@ package tn.esprit.autolock.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autolock.domain.Vehicule;
-import tn.esprit.autolock.repository.VehiculeRepository;
+import tn.esprit.autolock.repository.IVehiculeRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceVehicule implements IServiceVehicule {
 
     // Injection de dépendance par constructeur (généré par Lombok grâce à @RequiredArgsConstructor)
-    private final VehiculeRepository vehiculeRepository;
+    private final IVehiculeRepository vehiculeRepository;
 
     @Override
     public List<Vehicule> retrieveAllVehicules() {

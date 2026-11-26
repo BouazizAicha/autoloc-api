@@ -3,7 +3,7 @@ package tn.esprit.autolock.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autolock.domain.Paiement;
-import tn.esprit.autolock.repository.PaiementRepository;
+import tn.esprit.autolock.repository.IPaiementRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServicePaiement implements IServicePaiement {
 
     // Injection de dépendance par constructeur (généré par Lombok grâce à @RequiredArgsConstructor)
-    private final PaiementRepository paiementRepository;
+    private final IPaiementRepository paiementRepository;
 
     @Override
     public List<Paiement> retrieveAllPaiements() {

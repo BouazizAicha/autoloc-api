@@ -3,7 +3,7 @@ package tn.esprit.autolock.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autolock.domain.Contrat;
-import tn.esprit.autolock.repository.ContratRepository;
+import tn.esprit.autolock.repository.IContratRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceContrat implements IServiceContrat {
 
     // Injection de dépendance par constructeur (généré par Lombok grâce à @RequiredArgsConstructor)
-    private final ContratRepository contratRepository;
+    private final IContratRepository contratRepository;
 
     @Override
     public List<Contrat> retrieveAllContrats() {
