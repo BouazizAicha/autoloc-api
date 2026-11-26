@@ -32,7 +32,7 @@ public class Paiement {
     private ModePaiement modePaiement;
 
     // Plusieurs paiements pour un même contrat (côté propriétaire : colonne id_contrat)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_contrat")
     private Contrat contrat;
 }

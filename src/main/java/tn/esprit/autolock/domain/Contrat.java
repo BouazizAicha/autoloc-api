@@ -34,12 +34,13 @@ public class Contrat {
     private boolean valide;
 
     // Un contrat correspond à une seule réservation (côté propriétaire : colonne id_reservation, unique)
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_reservation", unique = true)
     private Reservation reservation;
 
     // Un contrat peut être réglé en plusieurs paiements (la clé étrangère est dans paiement)
-    @OneToMany(mappedBy = "contrat")
+    @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Paiement> paiements = new ArrayList<>();
 }

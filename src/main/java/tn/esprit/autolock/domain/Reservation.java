@@ -32,17 +32,17 @@ public class Reservation {
     private StatutReservation statut;
 
     // Plusieurs réservations pour un même client (côté propriétaire : colonne id_client)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_client")
     private Client client;
 
     // Plusieurs réservations pour un même véhicule (côté propriétaire : colonne id_vehicule)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_vehicule")
     private Vehicule vehicule;
 
     // Une réservation donne lieu à un seul contrat (côté inverse : la clé étrangère est dans contrat)
-    @OneToOne(mappedBy = "reservation")
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Contrat contrat;
 }

@@ -35,12 +35,12 @@ public class Agence {
     private String telephone;
 
     // Une agence emploie plusieurs employés (côté inverse : la clé étrangère est dans employe)
-    @OneToMany(mappedBy = "agence")
+    @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Employe> employes = new ArrayList<>();
 
     // Une agence possède plusieurs véhicules (la clé étrangère est dans vehicule)
-    @OneToMany(mappedBy = "agence")
+    @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Vehicule> vehicules = new ArrayList<>();
 }

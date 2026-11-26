@@ -41,7 +41,7 @@ public class Client {
     private LocalDate dateInscription;
 
     // Un client effectue plusieurs réservations (la clé étrangère est dans reservation)
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
 }

@@ -29,7 +29,7 @@ public class Employe {
     private RoleEmploye role;
 
     // Plusieurs employés travaillent dans une même agence (côté propriétaire : colonne id_agence)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_agence")
     private Agence agence;
 }

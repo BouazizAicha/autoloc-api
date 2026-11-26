@@ -28,7 +28,7 @@ public class Maintenance {
     private String description;
 
     // Un véhicule peut avoir plusieurs maintenances (côté propriétaire : colonne id_vehicule)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_vehicule")
     private Vehicule vehicule;
 }

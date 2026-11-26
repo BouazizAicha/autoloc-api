@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "equipement")
@@ -26,7 +26,7 @@ public class Equipement {
     private String libelle;
 
     // Un équipement peut équiper plusieurs véhicules (côté inverse : la table de jointure est gérée par Vehicule)
-    @ManyToMany(mappedBy = "equipements")
+    @ManyToMany(mappedBy = "equipements", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Vehicule> vehicules = new ArrayList<>();
+    private Set<Vehicule> vehicules = new HashSet<>();
 }

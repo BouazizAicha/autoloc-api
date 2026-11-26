@@ -26,6 +26,10 @@ public class ServiceContrat implements IServiceContrat {
 
     @Override
     public Contrat updateContrat(Contrat contrat) {
+        // Les paiements ne sont pas envoyés dans le JSON (@JsonIgnore) : sans cette ligne,
+        // orphanRemoval supprimerait tous les paiements du contrat lors d'un PUT
+        contratRepository.findById(contrat.getIdContrat())
+                .ifPresent(existant -> contrat.setPaiements(existant.getPaiements()));
         return contratRepository.save(contrat);
     }
 
