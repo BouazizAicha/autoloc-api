@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Reservation;
 import tn.esprit.autolock.dto.ReservationDTO;
 import tn.esprit.autolock.mapper.ReservationMapper;
-import tn.esprit.autolock.service.IServiceReservation;
+import tn.esprit.autolock.service.IReservationService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceReservation
-    private final IServiceReservation serviceReservation;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IReservationService reservationService;
     private final ReservationMapper reservationMapper;
 
-    @Operation(description = "Récupérer tous les reservations")
+    @Operation(description = "Récupérer la liste complète (reservations)")
     @GetMapping
-    public List<ReservationDTO> retrieveAllReservations() {
-        return reservationMapper.toDtoList(serviceReservation.retrieveAllReservations());
+    public List<ReservationDTO> findAll() {
+        return reservationMapper.toDtoList(reservationService.findAll());
     }
 
-    @Operation(description = "Récupérer un réservation par son id")
-    @GetMapping("/{idReservation}")
-    public ReservationDTO retrieveReservation(@PathVariable Long idReservation) {
-        return reservationMapper.toDto(serviceReservation.retrieveReservation(idReservation));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public ReservationDTO findById(@PathVariable("id") Long id) {
+        return reservationMapper.toDto(reservationService.findById(id));
     }
 
-    @Operation(description = "Ajouter un réservation")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public ReservationDTO addReservation(@RequestBody Reservation reservation) {
-        return reservationMapper.toDto(serviceReservation.addReservation(reservation));
+    public ReservationDTO create(@RequestBody Reservation reservation) {
+        return reservationMapper.toDto(reservationService.create(reservation));
     }
 
-    @Operation(description = "Ajouter plusieurs reservations")
-    @PostMapping("/all")
-    public List<ReservationDTO> addReservations(@RequestBody List<Reservation> reservations) {
-        return reservationMapper.toDtoList(serviceReservation.addReservations(reservations));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public ReservationDTO update(@PathVariable("id") Long id, @RequestBody Reservation reservation) {
+        return reservationMapper.toDto(reservationService.update(id, reservation));
     }
 
-    @Operation(description = "Modifier un réservation")
-    @PutMapping
-    public ReservationDTO updateReservation(@RequestBody Reservation reservation) {
-        return reservationMapper.toDto(serviceReservation.updateReservation(reservation));
-    }
-
-    @Operation(description = "Supprimer un réservation par son id")
-    @DeleteMapping("/{idReservation}")
-    public void removeReservation(@PathVariable Long idReservation) {
-        serviceReservation.removeReservation(idReservation);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        reservationService.deleteById(id);
     }
 }

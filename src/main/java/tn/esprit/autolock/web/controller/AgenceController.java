@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Agence;
 import tn.esprit.autolock.dto.AgenceDTO;
 import tn.esprit.autolock.mapper.AgenceMapper;
-import tn.esprit.autolock.service.IServiceAgence;
+import tn.esprit.autolock.service.IAgenceService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AgenceController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceAgence
-    private final IServiceAgence serviceAgence;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IAgenceService agenceService;
     private final AgenceMapper agenceMapper;
 
-    @Operation(description = "Récupérer tous les agences")
+    @Operation(description = "Récupérer la liste complète (agences)")
     @GetMapping
-    public List<AgenceDTO> retrieveAllAgences() {
-        return agenceMapper.toDtoList(serviceAgence.retrieveAllAgences());
+    public List<AgenceDTO> findAll() {
+        return agenceMapper.toDtoList(agenceService.findAll());
     }
 
-    @Operation(description = "Récupérer un agence par son id")
-    @GetMapping("/{idAgence}")
-    public AgenceDTO retrieveAgence(@PathVariable Long idAgence) {
-        return agenceMapper.toDto(serviceAgence.retrieveAgence(idAgence));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public AgenceDTO findById(@PathVariable("id") Long id) {
+        return agenceMapper.toDto(agenceService.findById(id));
     }
 
-    @Operation(description = "Ajouter un agence")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public AgenceDTO addAgence(@RequestBody Agence agence) {
-        return agenceMapper.toDto(serviceAgence.addAgence(agence));
+    public AgenceDTO create(@RequestBody Agence agence) {
+        return agenceMapper.toDto(agenceService.create(agence));
     }
 
-    @Operation(description = "Ajouter plusieurs agences")
-    @PostMapping("/all")
-    public List<AgenceDTO> addAgences(@RequestBody List<Agence> agences) {
-        return agenceMapper.toDtoList(serviceAgence.addAgences(agences));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public AgenceDTO update(@PathVariable("id") Long id, @RequestBody Agence agence) {
+        return agenceMapper.toDto(agenceService.update(id, agence));
     }
 
-    @Operation(description = "Modifier un agence")
-    @PutMapping
-    public AgenceDTO updateAgence(@RequestBody Agence agence) {
-        return agenceMapper.toDto(serviceAgence.updateAgence(agence));
-    }
-
-    @Operation(description = "Supprimer un agence par son id")
-    @DeleteMapping("/{idAgence}")
-    public void removeAgence(@PathVariable Long idAgence) {
-        serviceAgence.removeAgence(idAgence);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        agenceService.deleteById(id);
     }
 }

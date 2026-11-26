@@ -90,16 +90,8 @@ Content-Type: application/json
 
 > {% client.global.set("idContrat", response.body.idContrat); %}
 
-### 8. Paiement
-POST http://localhost:8081/paiements
-Content-Type: application/json
-
-{
-  "montant": 342.00,
-  "datePaiement": "2026-10-30",
-  "modePaiement": "CARTE",
-  "contrat": { "idContrat": {{idContrat}} }
-}
+### 8. Paiement (lecture seule : les paiements passent par le Contrat)
+GET http://localhost:8081/paiements
 
 ### 9. Maintenance
 POST http://localhost:8081/maintenances
@@ -116,7 +108,7 @@ Content-Type: application/json
 GET http://localhost:8081/equipements/{{idEquipement}}
 
 ### 11. PUT (modifier)
-PUT http://localhost:8081/equipements
+PUT http://localhost:8081/equipements/{{idEquipement}}
 Content-Type: application/json
 
 {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Vehicule;
 import tn.esprit.autolock.dto.VehiculeDTO;
 import tn.esprit.autolock.mapper.VehiculeMapper;
-import tn.esprit.autolock.service.IServiceVehicule;
+import tn.esprit.autolock.service.IVehiculeService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VehiculeController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceVehicule
-    private final IServiceVehicule serviceVehicule;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IVehiculeService vehiculeService;
     private final VehiculeMapper vehiculeMapper;
 
-    @Operation(description = "Récupérer tous les vehicules")
+    @Operation(description = "Récupérer la liste complète (vehicules)")
     @GetMapping
-    public List<VehiculeDTO> retrieveAllVehicules() {
-        return vehiculeMapper.toDtoList(serviceVehicule.retrieveAllVehicules());
+    public List<VehiculeDTO> findAll() {
+        return vehiculeMapper.toDtoList(vehiculeService.findAll());
     }
 
-    @Operation(description = "Récupérer un véhicule par son id")
-    @GetMapping("/{idVehicule}")
-    public VehiculeDTO retrieveVehicule(@PathVariable Long idVehicule) {
-        return vehiculeMapper.toDto(serviceVehicule.retrieveVehicule(idVehicule));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public VehiculeDTO findById(@PathVariable("id") Long id) {
+        return vehiculeMapper.toDto(vehiculeService.findById(id));
     }
 
-    @Operation(description = "Ajouter un véhicule")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public VehiculeDTO addVehicule(@RequestBody Vehicule vehicule) {
-        return vehiculeMapper.toDto(serviceVehicule.addVehicule(vehicule));
+    public VehiculeDTO create(@RequestBody Vehicule vehicule) {
+        return vehiculeMapper.toDto(vehiculeService.create(vehicule));
     }
 
-    @Operation(description = "Ajouter plusieurs vehicules")
-    @PostMapping("/all")
-    public List<VehiculeDTO> addVehicules(@RequestBody List<Vehicule> vehicules) {
-        return vehiculeMapper.toDtoList(serviceVehicule.addVehicules(vehicules));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public VehiculeDTO update(@PathVariable("id") Long id, @RequestBody Vehicule vehicule) {
+        return vehiculeMapper.toDto(vehiculeService.update(id, vehicule));
     }
 
-    @Operation(description = "Modifier un véhicule")
-    @PutMapping
-    public VehiculeDTO updateVehicule(@RequestBody Vehicule vehicule) {
-        return vehiculeMapper.toDto(serviceVehicule.updateVehicule(vehicule));
-    }
-
-    @Operation(description = "Supprimer un véhicule par son id")
-    @DeleteMapping("/{idVehicule}")
-    public void removeVehicule(@PathVariable Long idVehicule) {
-        serviceVehicule.removeVehicule(idVehicule);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        vehiculeService.deleteById(id);
     }
 }

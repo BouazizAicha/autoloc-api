@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Contrat;
 import tn.esprit.autolock.dto.ContratDTO;
 import tn.esprit.autolock.mapper.ContratMapper;
-import tn.esprit.autolock.service.IServiceContrat;
+import tn.esprit.autolock.service.IContratService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContratController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceContrat
-    private final IServiceContrat serviceContrat;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IContratService contratService;
     private final ContratMapper contratMapper;
 
-    @Operation(description = "Récupérer tous les contrats")
+    @Operation(description = "Récupérer la liste complète (contrats)")
     @GetMapping
-    public List<ContratDTO> retrieveAllContrats() {
-        return contratMapper.toDtoList(serviceContrat.retrieveAllContrats());
+    public List<ContratDTO> findAll() {
+        return contratMapper.toDtoList(contratService.findAll());
     }
 
-    @Operation(description = "Récupérer un contrat par son id")
-    @GetMapping("/{idContrat}")
-    public ContratDTO retrieveContrat(@PathVariable Long idContrat) {
-        return contratMapper.toDto(serviceContrat.retrieveContrat(idContrat));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public ContratDTO findById(@PathVariable("id") Long id) {
+        return contratMapper.toDto(contratService.findById(id));
     }
 
-    @Operation(description = "Ajouter un contrat")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public ContratDTO addContrat(@RequestBody Contrat contrat) {
-        return contratMapper.toDto(serviceContrat.addContrat(contrat));
+    public ContratDTO create(@RequestBody Contrat contrat) {
+        return contratMapper.toDto(contratService.create(contrat));
     }
 
-    @Operation(description = "Ajouter plusieurs contrats")
-    @PostMapping("/all")
-    public List<ContratDTO> addContrats(@RequestBody List<Contrat> contrats) {
-        return contratMapper.toDtoList(serviceContrat.addContrats(contrats));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public ContratDTO update(@PathVariable("id") Long id, @RequestBody Contrat contrat) {
+        return contratMapper.toDto(contratService.update(id, contrat));
     }
 
-    @Operation(description = "Modifier un contrat")
-    @PutMapping
-    public ContratDTO updateContrat(@RequestBody Contrat contrat) {
-        return contratMapper.toDto(serviceContrat.updateContrat(contrat));
-    }
-
-    @Operation(description = "Supprimer un contrat par son id")
-    @DeleteMapping("/{idContrat}")
-    public void removeContrat(@PathVariable Long idContrat) {
-        serviceContrat.removeContrat(idContrat);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        contratService.deleteById(id);
     }
 }

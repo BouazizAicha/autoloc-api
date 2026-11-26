@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Employe;
 import tn.esprit.autolock.dto.EmployeDTO;
 import tn.esprit.autolock.mapper.EmployeMapper;
-import tn.esprit.autolock.service.IServiceEmploye;
+import tn.esprit.autolock.service.IEmployeService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceEmploye
-    private final IServiceEmploye serviceEmploye;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IEmployeService employeService;
     private final EmployeMapper employeMapper;
 
-    @Operation(description = "Récupérer tous les employes")
+    @Operation(description = "Récupérer la liste complète (employes)")
     @GetMapping
-    public List<EmployeDTO> retrieveAllEmployes() {
-        return employeMapper.toDtoList(serviceEmploye.retrieveAllEmployes());
+    public List<EmployeDTO> findAll() {
+        return employeMapper.toDtoList(employeService.findAll());
     }
 
-    @Operation(description = "Récupérer un employé par son id")
-    @GetMapping("/{idEmploye}")
-    public EmployeDTO retrieveEmploye(@PathVariable Long idEmploye) {
-        return employeMapper.toDto(serviceEmploye.retrieveEmploye(idEmploye));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public EmployeDTO findById(@PathVariable("id") Long id) {
+        return employeMapper.toDto(employeService.findById(id));
     }
 
-    @Operation(description = "Ajouter un employé")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public EmployeDTO addEmploye(@RequestBody Employe employe) {
-        return employeMapper.toDto(serviceEmploye.addEmploye(employe));
+    public EmployeDTO create(@RequestBody Employe employe) {
+        return employeMapper.toDto(employeService.create(employe));
     }
 
-    @Operation(description = "Ajouter plusieurs employes")
-    @PostMapping("/all")
-    public List<EmployeDTO> addEmployes(@RequestBody List<Employe> employes) {
-        return employeMapper.toDtoList(serviceEmploye.addEmployes(employes));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public EmployeDTO update(@PathVariable("id") Long id, @RequestBody Employe employe) {
+        return employeMapper.toDto(employeService.update(id, employe));
     }
 
-    @Operation(description = "Modifier un employé")
-    @PutMapping
-    public EmployeDTO updateEmploye(@RequestBody Employe employe) {
-        return employeMapper.toDto(serviceEmploye.updateEmploye(employe));
-    }
-
-    @Operation(description = "Supprimer un employé par son id")
-    @DeleteMapping("/{idEmploye}")
-    public void removeEmploye(@PathVariable Long idEmploye) {
-        serviceEmploye.removeEmploye(idEmploye);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        employeService.deleteById(id);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Equipement;
 import tn.esprit.autolock.dto.EquipementDTO;
 import tn.esprit.autolock.mapper.EquipementMapper;
-import tn.esprit.autolock.service.IServiceEquipement;
+import tn.esprit.autolock.service.IEquipementService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EquipementController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceEquipement
-    private final IServiceEquipement serviceEquipement;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IEquipementService equipementService;
     private final EquipementMapper equipementMapper;
 
-    @Operation(description = "Récupérer tous les equipements")
+    @Operation(description = "Récupérer la liste complète (equipements)")
     @GetMapping
-    public List<EquipementDTO> retrieveAllEquipements() {
-        return equipementMapper.toDtoList(serviceEquipement.retrieveAllEquipements());
+    public List<EquipementDTO> findAll() {
+        return equipementMapper.toDtoList(equipementService.findAll());
     }
 
-    @Operation(description = "Récupérer un équipement par son id")
-    @GetMapping("/{idEquipement}")
-    public EquipementDTO retrieveEquipement(@PathVariable Long idEquipement) {
-        return equipementMapper.toDto(serviceEquipement.retrieveEquipement(idEquipement));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public EquipementDTO findById(@PathVariable("id") Long id) {
+        return equipementMapper.toDto(equipementService.findById(id));
     }
 
-    @Operation(description = "Ajouter un équipement")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public EquipementDTO addEquipement(@RequestBody Equipement equipement) {
-        return equipementMapper.toDto(serviceEquipement.addEquipement(equipement));
+    public EquipementDTO create(@RequestBody Equipement equipement) {
+        return equipementMapper.toDto(equipementService.create(equipement));
     }
 
-    @Operation(description = "Ajouter plusieurs equipements")
-    @PostMapping("/all")
-    public List<EquipementDTO> addEquipements(@RequestBody List<Equipement> equipements) {
-        return equipementMapper.toDtoList(serviceEquipement.addEquipements(equipements));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public EquipementDTO update(@PathVariable("id") Long id, @RequestBody Equipement equipement) {
+        return equipementMapper.toDto(equipementService.update(id, equipement));
     }
 
-    @Operation(description = "Modifier un équipement")
-    @PutMapping
-    public EquipementDTO updateEquipement(@RequestBody Equipement equipement) {
-        return equipementMapper.toDto(serviceEquipement.updateEquipement(equipement));
-    }
-
-    @Operation(description = "Supprimer un équipement par son id")
-    @DeleteMapping("/{idEquipement}")
-    public void removeEquipement(@PathVariable Long idEquipement) {
-        serviceEquipement.removeEquipement(idEquipement);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        equipementService.deleteById(id);
     }
 }

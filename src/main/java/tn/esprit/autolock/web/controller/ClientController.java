@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Client;
 import tn.esprit.autolock.dto.ClientDTO;
 import tn.esprit.autolock.mapper.ClientMapper;
-import tn.esprit.autolock.service.IServiceClient;
+import tn.esprit.autolock.service.IClientService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceClient
-    private final IServiceClient serviceClient;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IClientService clientService;
     private final ClientMapper clientMapper;
 
-    @Operation(description = "Récupérer tous les clients")
+    @Operation(description = "Récupérer la liste complète (clients)")
     @GetMapping
-    public List<ClientDTO> retrieveAllClients() {
-        return clientMapper.toDtoList(serviceClient.retrieveAllClients());
+    public List<ClientDTO> findAll() {
+        return clientMapper.toDtoList(clientService.findAll());
     }
 
-    @Operation(description = "Récupérer un client par son id")
-    @GetMapping("/{idClient}")
-    public ClientDTO retrieveClient(@PathVariable Long idClient) {
-        return clientMapper.toDto(serviceClient.retrieveClient(idClient));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public ClientDTO findById(@PathVariable("id") Long id) {
+        return clientMapper.toDto(clientService.findById(id));
     }
 
-    @Operation(description = "Ajouter un client")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public ClientDTO addClient(@RequestBody Client client) {
-        return clientMapper.toDto(serviceClient.addClient(client));
+    public ClientDTO create(@RequestBody Client client) {
+        return clientMapper.toDto(clientService.create(client));
     }
 
-    @Operation(description = "Ajouter plusieurs clients")
-    @PostMapping("/all")
-    public List<ClientDTO> addClients(@RequestBody List<Client> clients) {
-        return clientMapper.toDtoList(serviceClient.addClients(clients));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public ClientDTO update(@PathVariable("id") Long id, @RequestBody Client client) {
+        return clientMapper.toDto(clientService.update(id, client));
     }
 
-    @Operation(description = "Modifier un client")
-    @PutMapping
-    public ClientDTO updateClient(@RequestBody Client client) {
-        return clientMapper.toDto(serviceClient.updateClient(client));
-    }
-
-    @Operation(description = "Supprimer un client par son id")
-    @DeleteMapping("/{idClient}")
-    public void removeClient(@PathVariable Long idClient) {
-        serviceClient.removeClient(idClient);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        clientService.deleteById(id);
     }
 }

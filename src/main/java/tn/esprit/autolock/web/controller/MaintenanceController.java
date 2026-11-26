@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Maintenance;
 import tn.esprit.autolock.dto.MaintenanceDTO;
 import tn.esprit.autolock.mapper.MaintenanceMapper;
-import tn.esprit.autolock.service.IServiceMaintenance;
+import tn.esprit.autolock.service.IMaintenanceService;
 
 import java.util.List;
 
@@ -17,44 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MaintenanceController {
 
-    // Le contrôleur dépend de l'interface du service (et non de son implémentation) : Spring injecte ServiceMaintenance
-    private final IServiceMaintenance serviceMaintenance;
-    // Le mapper convertit l'entité en DTO avant de répondre au client
+    // Le contrôleur dépend de l'interface du service (jamais de son implémentation)
+    private final IMaintenanceService maintenanceService;
     private final MaintenanceMapper maintenanceMapper;
 
-    @Operation(description = "Récupérer tous les maintenances")
+    @Operation(description = "Récupérer la liste complète (maintenances)")
     @GetMapping
-    public List<MaintenanceDTO> retrieveAllMaintenances() {
-        return maintenanceMapper.toDtoList(serviceMaintenance.retrieveAllMaintenances());
+    public List<MaintenanceDTO> findAll() {
+        return maintenanceMapper.toDtoList(maintenanceService.findAll());
     }
 
-    @Operation(description = "Récupérer un maintenance par son id")
-    @GetMapping("/{idMaintenance}")
-    public MaintenanceDTO retrieveMaintenance(@PathVariable Long idMaintenance) {
-        return maintenanceMapper.toDto(serviceMaintenance.retrieveMaintenance(idMaintenance));
+    @Operation(description = "Récupérer un élément par son id")
+    @GetMapping("/{id}")
+    public MaintenanceDTO findById(@PathVariable("id") Long id) {
+        return maintenanceMapper.toDto(maintenanceService.findById(id));
     }
 
-    @Operation(description = "Ajouter un maintenance")
+    @Operation(description = "Créer un élément (sans identifiant)")
     @PostMapping
-    public MaintenanceDTO addMaintenance(@RequestBody Maintenance maintenance) {
-        return maintenanceMapper.toDto(serviceMaintenance.addMaintenance(maintenance));
+    public MaintenanceDTO create(@RequestBody Maintenance maintenance) {
+        return maintenanceMapper.toDto(maintenanceService.create(maintenance));
     }
 
-    @Operation(description = "Ajouter plusieurs maintenances")
-    @PostMapping("/all")
-    public List<MaintenanceDTO> addMaintenances(@RequestBody List<Maintenance> maintenances) {
-        return maintenanceMapper.toDtoList(serviceMaintenance.addMaintenances(maintenances));
+    @Operation(description = "Modifier un élément existant")
+    @PutMapping("/{id}")
+    public MaintenanceDTO update(@PathVariable("id") Long id, @RequestBody Maintenance maintenance) {
+        return maintenanceMapper.toDto(maintenanceService.update(id, maintenance));
     }
 
-    @Operation(description = "Modifier un maintenance")
-    @PutMapping
-    public MaintenanceDTO updateMaintenance(@RequestBody Maintenance maintenance) {
-        return maintenanceMapper.toDto(serviceMaintenance.updateMaintenance(maintenance));
-    }
-
-    @Operation(description = "Supprimer un maintenance par son id")
-    @DeleteMapping("/{idMaintenance}")
-    public void removeMaintenance(@PathVariable Long idMaintenance) {
-        serviceMaintenance.removeMaintenance(idMaintenance);
+    @Operation(description = "Supprimer un élément par son id")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        maintenanceService.deleteById(id);
     }
 }
