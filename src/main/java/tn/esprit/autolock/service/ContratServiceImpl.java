@@ -2,10 +2,17 @@ package tn.esprit.autolock.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.autolock.domain.Contrat;
+import tn.esprit.autolock.domain.Reservation;
+import tn.esprit.autolock.dto.ContratDTO;
+import tn.esprit.autolock.mapper.ContratMapper;
+import tn.esprit.autolock.repository.IReservationRepository;
 import tn.esprit.autolock.exception.ResourceNotFoundException;
 import tn.esprit.autolock.repository.IContratRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -14,6 +21,8 @@ public class ContratServiceImpl implements IContratService {
 
     // Injection par constructeur (généré par Lombok) d'une dépendance typée par interface
     private final IContratRepository contratRepository;
+    private final IReservationRepository reservationRepository;
+    private final ContratMapper contratMapper;
 
     @Override
     public Contrat create(Contrat e) {
@@ -55,6 +64,27 @@ public class ContratServiceImpl implements IContratService {
             throw new ResourceNotFoundException("Contrat", id);
         }
         contratRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public ContratDTO affecterContratAReservation(LocalDate dateSignature, LocalDate dateDebut, LocalDate dateFin) {
+        if (dateSignature == null) {
+            throw new IllegalArgumentException("La date de signature est obligatoire");
+        }
+        Reservation reservation = reservationRepository.findFirstByDateDebutAndDateFin(dateDebut, dateFin)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Réservation introuvable pour la période " + dateDebut + " - " + dateFin));
+        if (reservation.getContrat() != null) {
+            throw new IllegalArgumentException("Cette réservation a déjà un contrat");
+        }
+        Contrat contrat = new Contrat();
+        contrat.setDateSignature(dateSignature);
+        BigDecimal tarif = reservation.getVehicule() != null ? reservation.getVehicule().getTarifJournalier() : null;
+        contrat.setMontantTotal(MontantCalculator.calculer(tarif, dateDebut, dateFin));
+        contrat.setValide(true);
+        contrat.setReservation(reservation);
+        return contratMapper.toDto(contratRepository.save(contrat));
     }
 
     private static void valider(Contrat e) {

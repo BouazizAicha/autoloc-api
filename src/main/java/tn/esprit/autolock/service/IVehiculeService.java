@@ -2,6 +2,7 @@ package tn.esprit.autolock.service;
 
 import java.util.List;
 import tn.esprit.autolock.domain.Vehicule;
+import tn.esprit.autolock.dto.VehiculeDTO;
 
 public interface IVehiculeService {
 
@@ -14,4 +15,8 @@ public interface IVehiculeService {
     Vehicule update(Long id, Vehicule vehicule);
 
     void deleteById(Long id);
+
+    VehiculeDTO affecterVehiculeAEquipement(Long idVehicule, Long idEquipement);
+
+    VehiculeDTO affecterMaintenanceAvehicule(String description, String immatriculation);
 }

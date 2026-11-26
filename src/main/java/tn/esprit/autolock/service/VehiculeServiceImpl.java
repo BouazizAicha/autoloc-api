@@ -2,7 +2,14 @@ package tn.esprit.autolock.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.autolock.domain.Vehicule;
+import tn.esprit.autolock.domain.Equipement;
+import tn.esprit.autolock.domain.Maintenance;
+import tn.esprit.autolock.dto.VehiculeDTO;
+import tn.esprit.autolock.mapper.VehiculeMapper;
+import tn.esprit.autolock.repository.IEquipementRepository;
+import tn.esprit.autolock.repository.IMaintenanceRepository;
 import tn.esprit.autolock.exception.ResourceNotFoundException;
 import tn.esprit.autolock.repository.IVehiculeRepository;
 
@@ -14,6 +21,9 @@ public class VehiculeServiceImpl implements IVehiculeService {
 
     // Injection par constructeur (généré par Lombok) d'une dépendance typée par interface
     private final IVehiculeRepository vehiculeRepository;
+    private final IEquipementRepository equipementRepository;
+    private final IMaintenanceRepository maintenanceRepository;
+    private final VehiculeMapper vehiculeMapper;
 
     @Override
     public Vehicule create(Vehicule e) {
@@ -61,6 +71,30 @@ public class VehiculeServiceImpl implements IVehiculeService {
             throw new ResourceNotFoundException("Vehicule", id);
         }
         vehiculeRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public VehiculeDTO affecterVehiculeAEquipement(Long idVehicule, Long idEquipement) {
+        Vehicule vehicule = findById(idVehicule);
+        Equipement equipement = equipementRepository.findById(idEquipement)
+                .orElseThrow(() -> new ResourceNotFoundException("Equipement", idEquipement));
+        // Vehicule est le côté propriétaire de l'association : on ajoute l'équipement à son Set
+        vehicule.getEquipements().add(equipement);
+        return vehiculeMapper.toDto(vehiculeRepository.save(vehicule));
+    }
+
+    @Override
+    @Transactional
+    public VehiculeDTO affecterMaintenanceAvehicule(String description, String immatriculation) {
+        Maintenance maintenance = maintenanceRepository.findFirstByDescription(description)
+                .orElseThrow(() -> new ResourceNotFoundException("Maintenance introuvable : " + description));
+        Vehicule vehicule = vehiculeRepository.findByImmatriculation(immatriculation)
+                .orElseThrow(() -> new ResourceNotFoundException("Véhicule introuvable : " + immatriculation));
+        // Maintenance est le côté propriétaire (colonne id_vehicule)
+        maintenance.setVehicule(vehicule);
+        maintenanceRepository.save(maintenance);
+        return vehiculeMapper.toDto(vehicule);
     }
 
     private static void valider(Vehicule e) {

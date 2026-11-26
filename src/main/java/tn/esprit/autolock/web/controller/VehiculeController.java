@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Vehicule;
 import tn.esprit.autolock.dto.VehiculeDTO;
+
 import tn.esprit.autolock.mapper.VehiculeMapper;
 import tn.esprit.autolock.service.IVehiculeService;
 
@@ -65,5 +66,23 @@ public class VehiculeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@Parameter(description = "Identifiant") @PathVariable("id") Long id) {
         vehiculeService.deleteById(id);
+    }
+
+    @Operation(summary = "Affecter un équipement à un véhicule")
+    @ApiResponse(responseCode = "200", description = "Équipement affecté")
+    @ApiResponse(responseCode = "404", description = "Véhicule ou équipement introuvable")
+    @PutMapping("/{idVehicule}/equipements/{idEquipement}")
+    public VehiculeDTO affecterVehiculeAEquipement(@PathVariable("idVehicule") Long idVehicule,
+                                                   @PathVariable("idEquipement") Long idEquipement) {
+        return vehiculeService.affecterVehiculeAEquipement(idVehicule, idEquipement);
+    }
+
+    @Operation(summary = "Affecter une maintenance (par sa description) à un véhicule (par son immatriculation)")
+    @ApiResponse(responseCode = "200", description = "Maintenance affectée")
+    @ApiResponse(responseCode = "404", description = "Maintenance ou véhicule introuvable")
+    @PutMapping("/maintenance")
+    public VehiculeDTO affecterMaintenanceAvehicule(@RequestParam("description") String description,
+                                                    @RequestParam("immatriculation") String immatriculation) {
+        return vehiculeService.affecterMaintenanceAvehicule(description, immatriculation);
     }
 }

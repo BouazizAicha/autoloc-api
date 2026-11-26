@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Contrat;
 import tn.esprit.autolock.dto.ContratDTO;
+import org.springframework.format.annotation.DateTimeFormat;
 import tn.esprit.autolock.mapper.ContratMapper;
 import tn.esprit.autolock.service.IContratService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "Contrats", description = "Gestion des contrats de location")
@@ -65,5 +67,18 @@ public class ContratController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@Parameter(description = "Identifiant") @PathVariable("id") Long id) {
         contratService.deleteById(id);
+    }
+
+    @Operation(summary = "Créer un contrat et l'affecter à la réservation de la période donnée")
+    @ApiResponse(responseCode = "201", description = "Contrat créé et affecté")
+    @ApiResponse(responseCode = "400", description = "Réservation déjà couverte par un contrat ou données invalides")
+    @ApiResponse(responseCode = "404", description = "Aucune réservation pour cette période")
+    @PostMapping("/affecter-reservation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ContratDTO affecterContratAReservation(
+            @RequestParam("dateSignature") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateSignature,
+            @RequestParam("dateDebut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
+            @RequestParam("dateFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
+        return contratService.affecterContratAReservation(dateSignature, dateDebut, dateFin);
     }
 }

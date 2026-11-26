@@ -3,6 +3,7 @@ package tn.esprit.autolock.mapper;
 import org.springframework.stereotype.Component;
 import tn.esprit.autolock.domain.Reservation;
 import tn.esprit.autolock.dto.ReservationDTO;
+import tn.esprit.autolock.dto.ReservationResponseDTO;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -33,5 +34,22 @@ public class ReservationMapper {
 
     public List<ReservationDTO> toDtoList(List<Reservation> entities) {
         return entities.stream().map(this::toDto).toList();
+    }
+
+    public ReservationResponseDTO toResponseDto(Reservation e) {
+        if (e == null) {
+            return null;
+        }
+        return new ReservationResponseDTO(
+                e.getIdReservation(),
+                fmt(e.getDateDebut()),
+                fmt(e.getDateFin()),
+                e.getStatut(),
+                e.getClient() != null ? e.getClient().getIdClient() : null,
+                e.getClient() != null ? e.getClient().getNom() : null,
+                e.getClient() != null ? e.getClient().getPrenom() : null,
+                e.getVehicule() != null ? e.getVehicule().getIdVehicule() : null,
+                e.getVehicule() != null ? e.getVehicule().getImmatriculation() : null,
+                e.getContrat() != null ? e.getContrat().getIdContrat() : null);
     }
 }

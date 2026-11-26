@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.autolock.domain.Reservation;
 import tn.esprit.autolock.dto.ReservationDTO;
+import tn.esprit.autolock.dto.ReservationResponseDTO;
+import tn.esprit.autolock.dto.ReservationWithContratRequestDTO;
 import tn.esprit.autolock.mapper.ReservationMapper;
 import tn.esprit.autolock.service.IReservationService;
 
@@ -65,5 +67,25 @@ public class ReservationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@Parameter(description = "Identifiant") @PathVariable("id") Long id) {
         reservationService.deleteById(id);
+    }
+
+    @Operation(summary = "Affecter une réservation à un client (par nom et prénom)")
+    @ApiResponse(responseCode = "200", description = "Réservation affectée")
+    @ApiResponse(responseCode = "404", description = "Réservation ou client introuvable")
+    @PutMapping("/{idReservation}/client")
+    public ReservationResponseDTO affecterReservationAClient(@PathVariable("idReservation") Long idReservation,
+                                                             @RequestParam("nom") String nom,
+                                                             @RequestParam("prenom") String prenom) {
+        return reservationService.affecterReservationAClient(idReservation, nom, prenom);
+    }
+
+    @Operation(summary = "Créer une réservation et son contrat associé en une seule opération")
+    @ApiResponse(responseCode = "201", description = "Réservation et contrat créés")
+    @ApiResponse(responseCode = "400", description = "Données invalides")
+    @ApiResponse(responseCode = "404", description = "Client ou véhicule introuvable")
+    @PostMapping("/avec-contrat")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ReservationResponseDTO creerReservationEtContratAssocie(@RequestBody ReservationWithContratRequestDTO requestDTO) {
+        return reservationService.creerReservationEtContratAssocie(requestDTO);
     }
 }
